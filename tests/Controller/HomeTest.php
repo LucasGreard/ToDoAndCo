@@ -8,7 +8,7 @@ class HomeTest extends WebTestCase
 {
     public function testHomepageIsUp()
     {
-        $client = static::createClient();
+        $client = $this->createClient();
         $client->request('GET', '/');
         $this->assertResponseIsSuccessful();
     }

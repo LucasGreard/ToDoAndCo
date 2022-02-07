@@ -18,7 +18,15 @@ class TaskRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Task::class);
     }
-
+    public function findTaskByUser($user)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.User = :val')
+            ->setParameter('val', $user)
+            ->orderBy('t.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
     // /**
     //  * @return Task[] Returns an array of Task objects
     //  */

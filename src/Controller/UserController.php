@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Exception\ResourceValidationException;
 use App\Form\RegistrationFormType;
 use App\Form\UserEditType;
 use App\Form\UserType;
@@ -60,11 +61,17 @@ class UserController extends AbstractController
     /**
      * @Route("/{id}", name="user_show", methods={"GET"})
      */
-    public function show(User $user): Response
+    public function show(User $user, $id): Response
     {
-        return $this->render('user/show.html.twig', [
-            'user' => $user,
-        ]);
+        try {
+            if (!$id || $id < 0 || is_int($id))
+                throw new ResourceValidationException("The value of the id is not good, id must be an integer strictly greater than 1");
+            return $this->render('user/show.html.twig', [
+                'user' => $user,
+            ]);
+        } catch (ResourceValidationException $e) {
+            return $e->getMessage();
+        }
     }
 
     /**

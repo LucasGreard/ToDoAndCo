@@ -65,7 +65,7 @@ class TaskController extends AbstractController
      */
     public function show(Task $task): Response
     {
-        if ($task->getUser()->getEmail() == $this->getUser()->getUserIdentifier()) {
+        if ($task->getUser()->getEmail() == $this->getUser()->getUserIdentifier() || $this->getUser()->getRoles() == ['ROLE_ADMIN']) {
             return $this->render('task/show.html.twig', [
                 'task' => $task,
             ]);
@@ -78,7 +78,7 @@ class TaskController extends AbstractController
      */
     public function edit(Request $request, Task $task, EntityManagerInterface $entityManager): Response
     {
-        if ($task->getUser()->getEmail() == $this->getUser()->getUserIdentifier()) {
+        if ($task->getUser()->getEmail() == $this->getUser()->getUserIdentifier() || $this->getUser()->getRoles() == ['ROLE_ADMIN']) {
             $form = $this->createForm(TaskType::class, $task);
             $form->handleRequest($request);
 

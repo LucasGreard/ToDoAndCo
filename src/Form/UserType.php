@@ -21,6 +21,9 @@ class UserType extends AbstractType
             ->add('email', TextType::class, [
                 'attr' => ['fullname' => 'email']
             ])
+            ->add('pseudo', TextType::class, [
+                'attr' => ['fullname' => 'pseudo']
+            ])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller

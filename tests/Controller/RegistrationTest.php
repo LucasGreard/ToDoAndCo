@@ -3,6 +3,7 @@
 namespace App\Tests\Controller;
 
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class RegistrationTest extends WebTestCase
@@ -28,5 +29,7 @@ class RegistrationTest extends WebTestCase
 
         $this->assertEquals('anaelleoury40@gmail.com', $testUser->getEmail());
         $this->assertResponseIsSuccessful('201');
+
+
     }
 }

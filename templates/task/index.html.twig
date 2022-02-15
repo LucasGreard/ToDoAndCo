@@ -26,7 +26,7 @@
 					<td>{{ task.title }}</td>
 					<td>{{ task.content }}</td>
 					<td>{{ task.isDone ? 'Yes' : 'No' }}</td>
-					<td>{{ task.user }}</td>
+					<td>{{ task.user.pseudo }}</td>
 					<td>
 						<a href="{{ path('task_show', {'id': task.id}) }}">show</a>
 						<a href="{{ path('task_edit', {'id': task.id}) }}">edit</a>

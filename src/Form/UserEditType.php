@@ -21,6 +21,9 @@ class UserEditType extends AbstractType
             ->add('email', TextType::class, [
                 'attr' => ['fullname' => 'email']
             ])
+            ->add('pseudo', TextType::class, [
+                'attr' => ['fullname' => 'pseudo']
+            ])
             ->add('roles', ChoiceType::class, [
                 'choices'  => [
                     'Admin' => 'ROLE_ADMIN',

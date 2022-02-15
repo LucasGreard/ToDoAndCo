@@ -63,17 +63,14 @@ class UserController extends AbstractController
     /**
      * @Route("/{id}", name="user_show", methods={"GET"})
      */
-    public function show(User $user, $id): Response
+    public function show(UserRepository $userRepository, $id): Response
     {
-        try {
-            if (!$id || $id < 0 || is_int($id))
-                throw new ResourceValidationException("The value of the id is not good, id must be an integer strictly greater than 1");
-            return $this->render('user/show.html.twig', [
-                'user' => $user,
-            ]);
-        } catch (ResourceValidationException $e) {
-            return $e->getMessage();
-        }
+        $user = $userRepository->findOneBy(['id' => $id]);
+        if (!$id || $id < 0 || is_int($id) || !$user)
+            return $this->redirectToRoute('user_index', [], Response::HTTP_SEE_OTHER);
+        return $this->render('user/show.html.twig', [
+            'user' => $user,
+        ]);
     }
 
     /**

@@ -1,13 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Task{% endblock %}
+{% block title %}Edit Task
+{% endblock %}
 
 {% block body %}
-    <h1>Edit Task</h1>
+	<h1>Edit Task</h1>
+	<th>Author :</th>
+	<td>{{task.user.pseudo}}</td>
+	{{ include('task/_form.html.twig', {'button_label': 'Update'}) }}
 
-    {{ include('task/_form.html.twig', {'button_label': 'Update'}) }}
+	<a href="{{ path('task_index') }}">back to list</a>
 
-    <a href="{{ path('task_index') }}">back to list</a>
-
-    {{ include('task/_delete_form.html.twig') }}
+	{{ include('task/_delete_form.html.twig') }}
 {% endblock %}

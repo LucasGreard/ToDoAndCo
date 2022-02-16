@@ -27,9 +27,10 @@ class UserController extends AbstractController
      */
     public function index(UserRepository $userRepository): Response
     {
-        return $this->render('user/index.html.twig', [
-            'users' => $userRepository->findAll(),
-        ]);
+        if ($this->getUser()->getRoles() == ["ROLE_ADMIN"])
+            return $this->render('user/index.html.twig', [
+                'users' => $userRepository->findAll(),
+            ]);
     }
 
     /**

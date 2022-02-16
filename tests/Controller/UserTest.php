@@ -33,25 +33,25 @@ class UserTest extends WebTestCase
         $this->assertSelectorTextContains('footer', 'Copyright');
     }
 
-    public function testUserNew()
-    {
-        $client = $this->createLoginForTest();
-        $client->followRedirects();
-        $crawler = $client->request('GET', '/user/new');
-        $form = $crawler->selectButton('Save')->form();
+    // public function testUserNew()
+    // {
+    //     $client = $this->createLoginForTest();
+    //     $client->followRedirects();
+    //     $crawler = $client->request('GET', '/user/new');
+    //     $form = $crawler->selectButton('Save')->form();
 
-        $form['user[email]']->setValue('anaelleoury40@gmail.com');
-        $form['user[plainPassword]']->setValue('prout50');
-        $form['user[roles]']->setValue('ROLE_USER');
+    //     $form['user[email]']->setValue('anaelleoury40@gmail.com');
+    //     $form['user[plainPassword]']->setValue('prout50');
+    //     $form['user[roles]']->setValue('ROLE_USER');
 
-        $client->submit($form);
-        $crawler = $client->followRedirects();
-        $userRepository = static::getContainer()->get(UserRepository::class);
-        $testUser = $userRepository->findOneByEmail('anaelleoury40@gmail.com');
+    //     $client->submit($form);
+    //     $crawler = $client->followRedirects();
+    //     $userRepository = static::getContainer()->get(UserRepository::class);
+    //     $testUser = $userRepository->findOneByEmail('anaelleoury40@gmail.com');
 
-        $this->assertEquals('anaelleoury40@gmail.com', $testUser->getEmail());
-        $this->assertResponseIsSuccessful();
-    }
+    //     $this->assertEquals('anaelleoury40@gmail.com', $testUser->getEmail());
+    //     $this->assertResponseIsSuccessful();
+    // }
 
     public function testUserShow()
     {

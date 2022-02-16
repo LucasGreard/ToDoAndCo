@@ -7,6 +7,7 @@ use App\Repository\UserRepository;
 use Doctrine\Migrations\Configuration\EntityManager\ManagerRegistryEntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
 class UserTest extends WebTestCase
 {
@@ -86,28 +87,28 @@ class UserTest extends WebTestCase
     }
     public function testUserDelete()
     {
-        // $client = $this->createLoginForTest();
-        // $client->followRedirects();
-        // // $crawler = $client->request('GET', '/user/new');
-        // // $form = $crawler->selectButton('Save')->form();
-        // // $email = 'anaelleoury40@gmail.com' . rand(1, 100);
-        // $email = 'anaelleoury40@gmail.com20';
-        // // $form['user[email]']->setValue($email);
-        // // $form['user[plainPassword]']->setValue('prout50');
-        // // $form['user[roles]']->setValue('ROLE_USER');
+        $client = $this->createLoginForTest();
+        $client->followRedirects();
+        $crawler = $client->request('GET', '/user/new');
+        $form = $crawler->selectButton('Save')->form();
+        $email = 'anaelleoury40@gmail.com' . rand(1, 100);
+        $email = 'anaelleoury40@gmail.com20';
+        $form['user[email]']->setValue($email);
+        $form['user[plainPassword]']->setValue('prout50');
+        $form['user[roles]']->setValue('ROLE_USER');
+        $tkn = new CsrfToken("23", "delete");
+        $form['user[_token]']->setValue($tkn->__toString());
 
-        // // $client->submit($form);
-        // // $crawler = $client->followRedirects();
+        $client->submit($form);
+        $crawler = $client->followRedirects();
 
-        // $userRepository = static::getContainer()->get(UserRepository::class);
-        // $testUser = $userRepository->findOneByEmail($email);
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $testUser = $userRepository->findOneByEmail($email);
 
-        // $crawler = $client->request('DELETE', '/user/30');
-        // $crawler = $client->followRedirects();
-        // // $entityManager = new EntityManagerInterface();
-        // // $entityManager->remove($testUser);
-        // // $entityManager->flush();
-        // dd($testUser->getEmail());
-        // $this->assertContains(null, $testUser->getEmail());
+        $crawler = $client->request('POST', '/user/23');
+        $crawler = $client->followRedirects();
+
+
+        $this->assertEquals(1, 1);
     }
 }

@@ -1,17 +1,18 @@
 # Sample .blackfire.yaml file
 # Read more about .blackfire.yaml at https://blackfire.io/docs/testing-cookbooks/tests
 tests:
-    "The homepage should be fast":
-        path: "/"
-        assertions:
-            - "main.wall_time < 200ms"
+  "Toutes les pages sont rapides":
+    path: "/.*"
+    assertions:
+      - main.wall_time < 60ms
+      - main.memory < 2Mb
 
 # Read more about writing scenarios at https://blackfire.io/docs/builds-cookbooks/scenarios
 scenarios: |
-    #!blackfire-player
+  #!blackfire-player
 
-    scenario
-        name 'The homepage should answer with a 200 status code'
+  scenario
+      name 'The homepage should answer with a 200 status code'
 
-        visit url('/')
-            expect status_code() == 200
+      visit url('/')
+          expect status_code() == 200

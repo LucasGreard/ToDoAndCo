@@ -48,6 +48,9 @@ Pour lancer les tests
 $ vendor/bin/phpunit
 ```
 
+Pour voir le rapport de couverture de code :
+Accéder à your-localhost//coverage.php/
+
 ## Fabriqué avec
 
 - Symfony 5

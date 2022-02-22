@@ -53,6 +53,8 @@ $ vendor/bin/phpunit
 - Symfony 5
 - Visual Studio Code
 - WampServer (Faire tourner le serveur en local)
+- Blackfire (Pour la performance du code)
+- PHPUnit (Pour créer et lancer les tests avant mise en production)
 - PhpMyAdmin (Gérer la BDD)
 
 ## Auteurs

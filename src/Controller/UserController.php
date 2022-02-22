@@ -52,7 +52,7 @@ class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->redirectToRoute('user_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('user_index', [], 201);
         }
 
         return $this->renderForm('user/new.html.twig', [
@@ -66,9 +66,10 @@ class UserController extends AbstractController
      */
     public function show(UserRepository $userRepository, $id): Response
     {
-        $user = $userRepository->findOneBy(['id' => $id]);
-        if (!$id || $id < 0 || is_int($id) || !$user)
+
+        if (!$id || $id < 0 || is_int($id))
             return $this->redirectToRoute('user_index', [], Response::HTTP_SEE_OTHER);
+        $user = $userRepository->findOneBy(['id' => $id]);
         return $this->render('user/show.html.twig', [
             'user' => $user,
         ]);

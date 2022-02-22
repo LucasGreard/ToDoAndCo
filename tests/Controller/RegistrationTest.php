@@ -18,7 +18,21 @@ class RegistrationTest extends WebTestCase
             "role" => "ROLE_ADMIN"
         ];
     }
+    private function userForLogin()
+    {
+        return [
+            "email" => "lucas.greard07@gmail.com",
 
+        ];
+    }
+    private function createLoginForTest()
+    {
+        $client = $this->createClient();
+        $user = $this->userForLogin();
+        $userRepository =  $this->getContainer()->get(UserRepository::class);
+        $testUser = $userRepository->findOneByEmail($user['email']);
+        return $client->loginUser($testUser);
+    }
     public function testRegistrationPageIsUp()
     {
         $client = $this->createClient();
@@ -45,5 +59,23 @@ class RegistrationTest extends WebTestCase
         // $this->assertTrue($client->getResponse()->isRedirect("/"));
         //TROUVER COMMENT VERIFIER UNE REDIRECTION
         $this->assertResponseIsSuccessful('200');
+    }
+    public function testDeleteUserRegister()
+    {
+        $user = $this->createUser();
+        $client = $this->createLoginForTest();
+        $client->followRedirects();
+
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $testUser = $userRepository->findOneByEmail($user['email']);
+        $crawler = $client->request('GET', '/user/' . $testUser->getId());
+
+        $form = $crawler->selectButton('Delete')->form();
+        $client->submit($form);
+
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $testUser = $userRepository->findOneByEmail($user['email']);
+
+        $this->assertNull($testUser);
     }
 }

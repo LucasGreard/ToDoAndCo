@@ -70,13 +70,14 @@ class TasktTest extends WebTestCase
     {
         $client = $this->createLoginForTest();
 
-
+        $client->followRedirects();
         $task = $this->createTask();
         $taskRepository = static::getContainer()->get(TaskRepository::class);
         $testTask = $taskRepository->findOneBy(["title" => $task['title']]);
 
         $client->request('GET', '/task/' . $testTask->getId());
         $this->assertSelectorTextContains('table', $task['title']);
+        $this->assertResponseIsSuccessful('200');
     }
     public function testTaskEdit()
     {
@@ -140,7 +141,6 @@ class TasktTest extends WebTestCase
             "User" => $task['user_id'],
             "title" => $task['title']
         ]);
-
         $this->assertNull($testTask);
     }
     private function createUserWithRoleUser()
@@ -152,15 +152,27 @@ class TasktTest extends WebTestCase
     public function testShowTaskNotLogin()
     {
         $client = $this->createClient();
+
         $user = $this->createUserWithRoleUser();
         $userRepository =  $this->getContainer()->get(UserRepository::class);
         $testUser = $userRepository->findOneByEmail($user['email']);
         $client->loginUser($testUser);
         $client->request('GET', '/task');
-        $client->followRedirect();
+        $crawler = $client->followRedirect();
 
         $taskRepository =  $this->getContainer()->get(TaskRepository::class);
         $testTask = $taskRepository->findOneBy(["User" => $testUser]);
         $this->assertSelectorTextContains('table', $testTask->getTitle());
+        $this->assertResponseIsSuccessful('200');
+    }
+    public function testIndexNotLogin()
+    {
+        $client = $this->createClient();
+        $client->followRedirects();
+        $client->request('GET', '/task');
+
+        // dd($crawler->getUri());
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('form', "Email");
     }
 }

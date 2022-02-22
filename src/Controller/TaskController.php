@@ -51,7 +51,7 @@ class TaskController extends AbstractController
             $entityManager->persist($task);
             $entityManager->flush();
 
-            return $this->redirectToRoute('task_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('task_index', [], 201);
         }
 
         return $this->renderForm('task/new.html.twig', [
@@ -70,7 +70,6 @@ class TaskController extends AbstractController
                 'task' => $task,
             ]);
         }
-        return $this->redirectToRoute('task_index', [], Response::HTTP_SEE_OTHER);
     }
 
     /**
@@ -85,7 +84,7 @@ class TaskController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 $entityManager->flush();
 
-                return $this->redirectToRoute('task_index', [], Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute('task_index', [], 200);
             }
 
             return $this->renderForm('task/edit.html.twig', [
@@ -93,7 +92,6 @@ class TaskController extends AbstractController
                 'form' => $form,
             ]);
         }
-        return $this->redirectToRoute('task_index', [], Response::HTTP_SEE_OTHER);
     }
 
     /**

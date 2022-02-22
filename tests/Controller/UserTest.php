@@ -67,6 +67,7 @@ class UserTest extends WebTestCase
 
         $user = $this->createUser();
         $this->assertEquals($user['email'], $testUser->getEmail());
+        $this->assertResponseIsSuccessful();
     }
 
     public function testUserShow()
@@ -112,5 +113,14 @@ class UserTest extends WebTestCase
         $testUser = $userRepository->findOneByEmail($user['email']);
 
         $this->assertNull($testUser);
+    }
+    public function testShowWithWrongId()
+    {
+        $client = $this->createLoginForTest();
+        $client->followRedirects();
+        $user = $this->createUser();
+        $id = -1;
+        $client->request('GET', '/user/' . $id);
+        $this->assertSelectorTextContains('table', "lucas.greard07@gmail.com");
     }
 }

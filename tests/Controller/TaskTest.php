@@ -2,24 +2,37 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Task;
 use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
-use DateTimeImmutable;
-use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class TasktTest extends WebTestCase
 {
+    private function createUser()
+    {
+        return [
+            "email" => "lucas.greard07@gmail.com"
+        ];
+    }
+    private function createTask()
+    {
+        return [
+            "title" => "Je suis un test",
+            "content" => "Je suis un contenu de test"
+        ];
+    }
+    private function createTaskEdit()
+    {
+        $task = $this->createTask();
+        $taskReplacements = ['title' => "Je suis un nouveau test"];
+        return array_replace($task, $taskReplacements);
+    }
     private function createLoginForTest()
     {
         $client = $this->createClient();
+        $user = $this->createUser();
         $userRepository =  $this->getContainer()->get(UserRepository::class);
-
-        // retrieve the test user
-        $testUser = $userRepository->findOneByEmail('lucas.greard07@gmail.com');
-
-        // simulate $testUser being logged in
+        $testUser = $userRepository->findOneByEmail($user['email']);
         return $client->loginUser($testUser);
     }
     public function testTaskPageIsUp()
@@ -31,60 +44,77 @@ class TasktTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('footer', 'Copyright');
     }
-    // public function testTaskNew()
-    // {
-    //     $client = $this->createLoginForTest();
-    //     $client->followRedirects();
-    //     $crawler = $client->request('GET', '/task/new');
-    //     $form = $crawler->selectButton('Save')->form();
+    public function testTaskNew()
+    {
+        $client = $this->createLoginForTest();
+        $client->followRedirects();
+        $crawler = $client->request('GET', '/task/new');
 
-    //     $title = $form['task[title]']->setValue('Jesuisuntest');
-    //     $form['task[_token]']->setValue('Je suis un test');
+        $task = $this->createTask();
 
-    //     $client->submit($form);
-    //     $crawler = $client->followRedirects();
-    //     $taskRepository = static::getContainer()->get(TaskRepository::class);
-    //     $testTask = $taskRepository->findBy(["title" => $title]);
-    //     dd($testTask);
-    //     $this->assertEquals('anaelleoury40@gmail.com', $testTask->getEmail());
-    //     $this->assertResponseIsSuccessful();
-    // }
-    // public function testTaskShow(ManagerRegistry $doctrine)
-    // {
-    //     $client = $this->createLoginForTest();
-    //     $userRepository =  $this->getContainer()->get(UserRepository::class);
+        $form = $crawler->selectButton('Save')->form();
+        $form['task[title]']->setValue($task['title']);
+        $form['task[content]']->setValue($task['content']);
+        $client->submit($form);
 
-    //     // retrieve the test user
-    //     $testUser = $userRepository->findOneByEmail('lucas.greard07@gmail.com');
+        $crawler = $client->followRedirects();
+        $taskRepository = static::getContainer()->get(TaskRepository::class);
+        $testTask = $taskRepository->findOneBy(["title" => $task['title']]);
 
-    //     $task = new Task();
-    //     $task->setContent("Je suis un test")
-    //         ->setCreatedAt(new DateTimeImmutable('now'))
-    //         ->setTitle("Je suis un titre de test")
-    //         ->setIsDone(1)
-    //         ->setUser($testUser);
+        $user = $this->createUser();
+        $this->assertEquals($user['email'], $testTask->getUser()->getEmail());
+        $this->assertResponseIsSuccessful();
+    }
+    public function testTaskShow()
+    {
+        $client = $this->createLoginForTest();
 
-    //     $entityManager = $doctrine->getManager();
-    //     $entityManager->persist($task);
-    //     $entityManager->flush();
-    //     $client->request('GET', '/user/' . $testUser->getId());
-    //     $this->assertResponseIsSuccessful();
-    // }
-    // public function testTaskEdit()
-    // {
-    //     $client = $this->createLoginForTest();
-    //     $client->followRedirects();
-    //     $crawler = $client->request('GET', '/task/3/edit');
 
-    //     $this->assertResponseIsSuccessful();
+        $task = $this->createTask();
+        $taskRepository = static::getContainer()->get(TaskRepository::class);
+        $testTask = $taskRepository->findOneBy(["title" => $task['title']]);
 
-    //     $form = $crawler->selectButton('Update')->form();
+        $client->request('GET', '/task/' . $testTask->getId());
+        $this->assertSelectorTextContains('table', $task['title']);
+    }
+    public function testTaskEdit()
+    {
+        $client = $this->createLoginForTest();
+        $client->followRedirects();
 
-    //     $form['task[title]']->setValue('Je test');
-    //     $form['task[content]']->setValue('Je test 2');
+        $task = $this->createTask();
+        $taskRepository = static::getContainer()->get(TaskRepository::class);
+        $testTask = $taskRepository->findOneBy(["title" => $task['title']]);
 
-    //     $client->submit($form);
-    // }
+        $crawler = $client->request('GET', '/task/' . $testTask->getId() . '/edit');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertInputValueSame('task[title]', $task['title']);
+    }
+    public function testTaskEditIsSubmit()
+    {
+        $client = $this->createLoginForTest();
+        $client->followRedirects();
+
+        $task = $this->createTask();
+        $taskEdit = $this->createTaskEdit();
+        $taskRepository = static::getContainer()->get(TaskRepository::class);
+        $testTask = $taskRepository->findOneBy(["title" => $task['title']]);
+
+        $crawler = $client->request('GET', '/task/' . $testTask->getId() . '/edit');
+
+        $form = $crawler->selectButton('Update')->form();
+        $taskReplace = $this->createTaskEdit();
+        $form['task[title]']->setValue($taskReplace['title']);
+        $form['task[content]']->setValue($taskReplace['content']);
+
+        $client->submit($form);
+
+        $taskRepository = static::getContainer()->get(TaskRepository::class);
+        $testTask = $taskRepository->findOneBy(["title" => $taskReplace['title']]);
+
+        $this->assertEquals($taskReplace['title'], $testTask->getTitle());
+    }
     // public function testTaskDelete()
     // {
     // }

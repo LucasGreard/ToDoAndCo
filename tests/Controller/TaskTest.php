@@ -18,7 +18,8 @@ class TasktTest extends WebTestCase
     {
         return [
             "title" => "Je suis un test",
-            "content" => "Je suis un contenu de test"
+            "content" => "Je suis un contenu de test",
+            "user_id" => 2
         ];
     }
     private function createTaskEdit()
@@ -115,7 +116,51 @@ class TasktTest extends WebTestCase
 
         $this->assertEquals($taskReplace['title'], $testTask->getTitle());
     }
-    // public function testTaskDelete()
-    // {
-    // }
+    public function testTaskDelete()
+    {
+        $task = $this->createTask();
+        $client = $this->createLoginForTest();
+
+        $user = $this->createUser();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $userTest = $userRepository->findBy(["email" => $user['email']]);
+
+        $client->followRedirects();
+        $taskRepository = static::getContainer()->get(TaskRepository::class);
+        $testTask = $taskRepository->findOneBy([
+            "User" => $userTest[0]->getId(),
+        ]);
+        $crawler = $client->request('GET', '/task/' . $testTask->getId());
+
+        $form = $crawler->selectButton('Delete')->form();
+        $client->submit($form);
+
+        $taskRepository = static::getContainer()->get(TaskRepository::class);
+        $testTask = $taskRepository->findOneBy([
+            "User" => $task['user_id'],
+            "title" => $task['title']
+        ]);
+
+        $this->assertNull($testTask);
+    }
+    private function createUserWithRoleUser()
+    {
+        return [
+            "email" => "antoinegibon@gmail.com"
+        ];
+    }
+    public function testShowTaskNotLogin()
+    {
+        $client = $this->createClient();
+        $user = $this->createUserWithRoleUser();
+        $userRepository =  $this->getContainer()->get(UserRepository::class);
+        $testUser = $userRepository->findOneByEmail($user['email']);
+        $client->loginUser($testUser);
+        $client->request('GET', '/task');
+        $client->followRedirect();
+
+        $taskRepository =  $this->getContainer()->get(TaskRepository::class);
+        $testTask = $taskRepository->findOneBy(["User" => $testUser]);
+        $this->assertSelectorTextContains('table', $testTask->getTitle());
+    }
 }

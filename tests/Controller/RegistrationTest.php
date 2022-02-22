@@ -14,7 +14,8 @@ class RegistrationTest extends WebTestCase
         return [
             "email" => "anaelleoury40@gmail.com",
             "plainPassword" => "jetest50",
-            "pseudo" => "Anna"
+            "pseudo" => "Anna",
+            "role" => "ROLE_ADMIN"
         ];
     }
 
@@ -35,47 +36,14 @@ class RegistrationTest extends WebTestCase
         $form['registration_form[plainPassword]']->setValue($user['plainPassword']);
         $form['registration_form[pseudo]']->setValue($user['pseudo']);
 
-        $client->submit($form);
+        $crawler = $client->submit($form);
 
         $userRepository = static::getContainer()->get(UserRepository::class);
 
         $testUser = $userRepository->findOneByEmail($user["email"]);
-        $this->assertEquals('anaelleoury40@gmail.com', $testUser->getEmail());
-        $this->assertResponseIsSuccessful('201');
-    }
-    // public function testPasswordHash()
-    // {
-    //     $client = $this->createClient();
-    //     $client->followRedirects();
-    //     $crawler = $client->request('GET', '/register');
-    //     $form = $crawler->selectButton('Register')->form();
-    //     $user = $this->createUser();
-    //     $form['registration_form[email]']->setValue($user["email"]);
-    //     $form['registration_form[plainPassword]']->setValue($user['plainPassword']);
-    //     $form['registration_form[pseudo]']->setValue($user['pseudo']);
-
-    //     $client->submit($form);
-    //     $userRepository = static::getContainer()->get(UserRepository::class);
-    //     //Est-il possible d'implémenter une interface pour réutiliser la même fonction de hash que en prod ? (ici : UserPasswordHasherInterface $userPasswordHasher)
-    //     $passwordHash = password_hash($user['plainPassword'], PASSWORD_BCRYPT);
-    //     $testUser = $userRepository->findOneByEmail($user["email"]);
-    //     $this->assertEquals($passwordHash, $testUser->getPassword());
-    // }
-    public function testRoleUser()
-    {
-        $client = $this->createClient();
-        $client->followRedirects();
-        $crawler = $client->request('GET', '/register');
-        $form = $crawler->selectButton('Register')->form();
-        $user = $this->createUser();
-        $form['registration_form[email]']->setValue($user["email"]);
-        $form['registration_form[plainPassword]']->setValue($user['plainPassword']);
-        $form['registration_form[pseudo]']->setValue($user['pseudo']);
-
-        $client->submit($form);
-        $userRepository = static::getContainer()->get(UserRepository::class);
-
-        $testUser = $userRepository->findOneByEmail($user["email"]);
-        $this->assertEquals(["ROLE_ADMIN"], $testUser->getRoles());
+        $this->assertEquals($user["email"], $testUser->getEmail());
+        // $this->assertTrue($client->getResponse()->isRedirect("/"));
+        //TROUVER COMMENT VERIFIER UNE REDIRECTION
+        $this->assertResponseIsSuccessful('200');
     }
 }

@@ -29,11 +29,17 @@ Le principe général est le suivant :
 ### Création d’une requête de tirage (pull request)
 
 Premièrement, nous cliquons sur le bouton « Fork » pour obtenir une copie du projet.
+
 Votre copie de ce projet est à https://github.com/votrenom/todo&co et c’est ici que nous pouvons la modifier.
+
 Vous pouvez aussi la cloner localement, créer une branche thématique, modifier le code et pousser finalement cette modification sur GitHub.
+
 Maintenant, si vous allez sur votre projet dupliqué sur GitHub, vous pouvez voir que GitHub a remarqué que vous avez poussé une nouvelle branche thématique et affiche un gros bouton vert pour vérifier vos modifications et ouvrir une requête de tirage sur le projet original.
+
 Vous pouvez aussi vous rendre à la page « Branches » à https://github.com/<utilisateur>/<projet>/branches pour trouver votre branche et ouvrir une requête de tirage à partir de là.
+
 Si vous cliquez sur le bouton vert, une fenêtre vous permet de créer un titre et une description de la modification que vous souhaitez faire intégrer pour que je trouve une bonne raison de la prendre en considération. C’est généralement une bonne idée de passer un peu de temps à écrire une description aussi argumentée que possible pour que je sache pourquoi la modification est proposée et en quoi elle apporterait une amélioration au projet.
+
 Quand vous cliquez sur le bouton « Create pull request » sur cet écran, je reçois une notification m’indiquant que quelqu’un suggère une modification et qui renvoie à la page contenant toutes les informations correspondantes.
 
 ### Itérations sur une pull request

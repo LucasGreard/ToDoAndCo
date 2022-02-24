@@ -49,7 +49,7 @@ Cette conversation a lieu en ligne sur GitHub. Je peux faire une revue des diff�
 
 Une fois que le mainteneur a commenté, vous (et en fait toute personne surveillant le dépôt) recevrez une notification par email.
 N’importe qui peut aussi laisser un commentaire global sur la pull request. Sur la page de discussion d’une requête de tirage, nous pouvons voir un exemple où le propriétaire du projet commente une ligne de code puis laisse un commentaire général dans la section de discussion. Vous pouvez voir que les commentaires de code sont aussi publiés dans la conversation.
-
+![This is an image](https://myoctocat.com/assets/images/base-octocat.svg)
 Maintenant, vous savez ce que vous devez faire pour que ses modifications soient intégrées. Heureusement, ici c’est une chose facile à faire. Alors que par courriel, il faudrait retravailler les séries de commit et les soumettre à nouveau à la liste de diffusion, avec GitHub il suffit de soumettre les correctifs sur la branche thématique et de la repousser.
 Je serai notifié à nouveau des modifications du contributeur et pourra voir que les problèmes ont été réglés quand je visiterai la page de la pull request. En fait, comme la ligne de code initialement commentée a été modifiée entre temps, GitHub le remarque et fait disparaître la différence obsolète.
 

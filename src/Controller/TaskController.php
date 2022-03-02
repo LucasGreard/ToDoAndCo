@@ -65,6 +65,11 @@ class TaskController extends AbstractController
      */
     public function show(Task $task): Response
     {
+
+        if (null == $task->getUser())
+            return $this->render('task/show.html.twig', [
+                'task' => $task,
+            ]);
         if ($task->getUser()->getEmail() == $this->getUser()->getUserIdentifier() || $this->getUser()->getRoles() == ['ROLE_ADMIN']) {
             return $this->render('task/show.html.twig', [
                 'task' => $task,
@@ -77,6 +82,21 @@ class TaskController extends AbstractController
      */
     public function edit(Request $request, Task $task, EntityManagerInterface $entityManager): Response
     {
+        if (null == $task->getUser()) {
+            $form = $this->createForm(TaskType::class, $task);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager->flush();
+
+                return $this->redirectToRoute('task_index', [], 201);
+            }
+
+            return $this->renderForm('task/edit.html.twig', [
+                'task' => $task,
+                'form' => $form,
+            ]);
+        }
         if ($task->getUser()->getEmail() == $this->getUser()->getUserIdentifier() || $this->getUser()->getRoles() == ['ROLE_ADMIN']) {
             $form = $this->createForm(TaskType::class, $task);
             $form->handleRequest($request);
@@ -84,7 +104,7 @@ class TaskController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 $entityManager->flush();
 
-                return $this->redirectToRoute('task_index', [], 200);
+                return $this->redirectToRoute('task_index', [], 201);
             }
 
             return $this->renderForm('task/edit.html.twig', [

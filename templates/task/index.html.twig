@@ -26,7 +26,12 @@
 					<td>{{ task.title }}</td>
 					<td>{{ task.content }}</td>
 					<td>{{ task.isDone ? 'Yes' : 'No' }}</td>
-					<td>{{ task.user.pseudo }}</td>
+					{% if task.user.pseudo is defined %}
+						<td>{{ task.user.pseudo }}</td>
+					{% else %}
+						<td>Anonyme</td>
+					{% endif %}
+
 					<td>
 						<a href="{{ path('task_show', {'id': task.id}) }}">show</a>
 						<a href="{{ path('task_edit', {'id': task.id}) }}">edit</a>

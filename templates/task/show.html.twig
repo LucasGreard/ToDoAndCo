@@ -30,7 +30,11 @@
 			</tr>
 			<tr>
 				<th>Author</th>
-				<td>{{ task.user.pseudo}}</td>
+				{% if task.user.pseudo is defined %}
+					<td>{{ task.user.pseudo }}</td>
+				{% else %}
+					<td>Anonyme</td>
+				{% endif %}
 			</tr>
 		</tbody>
 	</table>

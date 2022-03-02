@@ -6,7 +6,12 @@
 {% block body %}
 	<h1>Edit Task</h1>
 	<th>Author :</th>
-	<td>{{task.user.pseudo}}</td>
+	<th>Author</th>
+	{% if task.user.pseudo is defined %}
+		<td>{{ task.user.pseudo }}</td>
+	{% else %}
+		<td>Anonyme</td>
+	{% endif %}
 	{{ include('task/_form.html.twig', {'button_label': 'Update'}) }}
 
 	<a href="{{ path('task_index') }}">back to list</a>

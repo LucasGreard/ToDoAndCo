@@ -56,8 +56,6 @@ class RegistrationTest extends WebTestCase
 
         $testUser = $userRepository->findOneByEmail($user["email"]);
         $this->assertEquals($user["email"], $testUser->getEmail());
-        // $this->assertTrue($client->getResponse()->isRedirect("/"));
-        //TROUVER COMMENT VERIFIER UNE REDIRECTION
         $this->assertResponseIsSuccessful('200');
     }
     public function testDeleteUserRegister()

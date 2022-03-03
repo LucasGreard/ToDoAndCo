@@ -42,6 +42,12 @@ $ cd C:\"\program files"\blackfire
 $ ./blackfire-agent.exe
 ```
 
+Pour lancer les fixtures
+
+```
+$ php bin/console doctrine:fixtures:load
+```
+
 Pour lancer les tests
 
 ```
